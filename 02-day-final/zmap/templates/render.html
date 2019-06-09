@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="msapplication-tap-highlight" content="no">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
+	<link rel="stylesheet" type="text/css" href="/static/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/lib/open-iconic/font/css/open-iconic-bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="/static/lib/leaflet/leaflet.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+	<title>Website title.</title>
+</head>
+<body>
+	<span id="goto-main"></span>
+	<nav id="navbar-main" class="navbar navbar-expand-sm sticky-top navbar-dark bg-dark hidden">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main-collapse">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div id="navbar-main-collapse" class="collapse navbar-collapse my-1">
+			<ul class="navbar-nav mr-auto">
+				<!-- TODO: determine which is active with a script -->
+				<li class="nav-item"><a class="nav-link" href="#goto-main">browse</a></li>
+				<li class="nav-item"><a class="nav-link" href="#goto-forms">submit</a></li>
+				<li class="nav-item"><a class="nav-link" href="#goto-contact">contact</a></li>
+				<li class="nav-item" id="map-settings-switch"><a class="nav-link" href="#">filters</a></li>
+				<li class="nav-item" id="map-type-switch"><a class="nav-link" href="#">types</a></li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container-fluid p-0">
+		<section id="content-main">
+			<div class="d-flex flex-row mb-3 ph-60">
+				<div class="map flex-fill">
+					<div id="map" class="border">map placeholder</div>
+					<button type="button" id="locate-me" class="btn btn-outline-dark float-right m-3"><span class="oi oi-compass"></span></button>
+				</div>
+			</div>
+		</section>
+		<div id="map-type-content" class="display-over jumbotron invisible">
+			<form>
+				<label for="map-type-set">Map type:</label>
+				<select class="custom-select custom-select-lg" id="map-type-set">
+					<option value="default">default</option>
+					<option value="type_2">different map type</option>
+					<option value="type_3">map type 3</option>
+				</select>
+				<button id="map-type-submit" type="submit" class="btn btn-outline-dark mt-3">Change</button>
+			</form>
+		</div>
+		<div id="map-settings-content" class="display-over jumbotron invisible">
+			<form>
+				<div class="form-group">
+					<label for="filter-address">Address:</label>
+					<input id="filter-address" class="form-control" type="text" value="address">
+				</div>
+				<div class="form-group mt-2">
+					<label for="filter-title">Title:</label>
+					<input id="filter-title" class="form-control" type="text" placeholder="title">
+				</div>
+				<div class="form-group mt-2">
+					<label for="filter-category">Category:</label>
+					<select class="form-control" id="filter-category">
+						<option></option>
+						<option>category 1</option>
+						<option>category 2</option>
+						<option>category 3</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<button id="filter-submit" type="submit" class="btn btn-outline-dark">filter</button>
+				</div>
+			</form>
+			<h6 class="float-right">Filtering matches every field. Empty field allows all values.</h6>
+		</div>
+		<section id="goto-forms" class="container">
+			<form action="{% url 'submit' %}" method="post">
+				<div class="ph-20">
+					<div class="form-group">
+						<label for="form-address">Address:</label>
+						<input name="address" id="form-address" class="form-control" type="text" placeholder="address" readonly>
+					</div>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="display-lat">Latitude:</label>
+							<input name="lat" id="display-lat" class="form-control" type="text" placeholder="latitude" readonly>
+						</div>
+						<div class="form-group col">
+							<label for="display-lng">Longitude:</label>
+							<input name="lng" id="display-lng" class="form-control" type="text" placeholder="longitude" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="ph-60">
+					<div class="form-group">
+						<label for="image-file-factory">Upload image:</label>
+						<div class="custom-file" id="image-file-factory">
+							<input type="file" class="custom-file-input" id="image-file-01">
+							<label class="custom-file-label" for="image-file-01">Choose file</label>
+						</div>
+					</div>
+					<div class="form-group mt-2">
+						<label for="form-title">Title:</label>
+						<input name="title" id="form-title" class="form-control" type="text" placeholder="title" required>
+					</div>
+					<div class="form-group mt-2">
+						<label for="form-category">Category:</label>
+						<select name="category" class="form-control" id="form-category">
+							<option>category 1</option>
+							<option>category 2</option>
+							<option>category 3</option>
+						</select>
+					</div>
+					<div class="form-group mt-2">
+						<label for="form-desc">Description:</label>
+						<textarea name="desc" class="form-control" id="form-desc" rows="2"></textarea>
+					</div>
+					<div class="form-group">
+						<input id="form-map-type" class="invisible" type="text" name="map_type" value="default">
+						<button id="form-submit" type="submit" class="btn btn-outline-dark float-right">submit</button>
+						<span class="invisible">.</span>
+					</div>
+				</div>
+			</form>
+		</section>
+		<div id="goto-contact" class="container my-5 ph-60">
+			<h2>Contact</h2>
+			<p>You can submit your suggestions or requests here.</p>
+			<form action="{% url 'feedback' %}" method="POST">
+				<div class="form-group">
+					<label for="email-form-content">Email us:</label>
+					<textarea name="feedback-content" class="form-control" id="email-form-content" rows="5" required></textarea>
+				</div>
+				<div class="form-group">
+					<button id="email-form-submit" type="submit" class="btn btn-outline-dark float-right">Send us an email!</button>
+					<span class="invisible">.</span>
+				</div>
+			</form>
+		</div>
+		<footer class="bg-dark text-light text-center mt-5 p-2">
+			free food -- muszę zasuwać
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="/static/lib/jquery/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="/static/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript" src="/static/lib/leaflet/leaflet.js"></script>
+	<script type="text/javascript" src="/static/js/map.js"></script>
+	<script type="text/javascript" src="/static/js/forms.js"></script>
+	<script type="text/javascript" src="/static/js/scroll.js"></script>
+	<script type="text/javascript" src="/static/js/map_settings.js"></script>
+</body>
+</html>
